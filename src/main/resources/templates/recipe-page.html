@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text = "${recipe.title}"/>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script>
+        function like() {
+            let src = document.getElementById("like");
+            if (src.getAttribute("src") == "https://i.imgur.com/VpxQtMt.png")
+                src.setAttribute("src", "https://i.imgur.com/QYZ9EhT.png");
+            else
+                src.setAttribute("src", "https://i.imgur.com/VpxQtMt.png");
+        }
+    </script>
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+
+<div class="container mt-5">
+    <h1 th:text="${recipe.title}"/>
+    <p class="fs-5 col-md-8" th:text="${recipe.description}" />
+
+    <div th:if="${recipe.author == username || role == 'ADMIN'}" class="mb-3">
+        <a th:href="'/recipes/' + ${recipe.id} + '/edit'" class="btn btn-primary btn-lg px-1">Редагувати</a>
+        <a th:href="'/recipes/' + ${recipe.id} + '/remove'" class="btn btn-primary btn-lg px-1">Видалити</a>
+    </div>
+    <img class= "mb-1" id = "like" src="https://i.imgur.com/VpxQtMt.png" width = "30px" onclick="like()">
+    <p class="text-muted mt-1" th:text="'Автор: ' + ${recipe.author}"/>
+    <hr class="col-3 col-md-2 mb-5">
+
+    <div class="row g-5">
+        <div class="col-md-6">
+            <h2>Індгрідієнти</h2>
+            <p>Для приготування нам знадобляться:</p>
+            <ul class="icon-list" th:each="ingre : ${recipe.ingredients.split(';')}">
+                <li class="text-muted" th:text="${ingre}"/>
+            </ul>
+        </div>
+
+        <div class="col-md-6">
+            <h2>Рецепт</h2>
+            <div th:each = "paragraph : ${recipe.full_text.split('<br>')}">
+                <p th:text = "${paragraph}"/>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:insert="blocks/footer :: footer"></div>
+</body>
+</html>
